@@ -1,6 +1,9 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
@@ -23,11 +26,16 @@ public class SignUpController extends HttpServlet {
         super();
        
     }
+    User user =new User();
+    UserDAO userdao = new UserDAO();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/signupView.jsp");
 		rd.forward(request,response);
+		
+		
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,7 +46,24 @@ public class SignUpController extends HttpServlet {
 		String password = request.getParameter("password"); //  get the password value from the jsp/html page
 		String confirmPassword = request.getParameter("confirmPassword"); //  get the confirm password value from the jsp/html page
 		LocalDate date= LocalDate.now(); // Java 8 Time API used to get system date and time at a particular instance
-		
+		user.setEmail(email);
+		user.setPassword(password);
+		 DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+         String strDate = dateFormat.format(date);  
+		user.setDate(strDate);
+		int checkUser = 0;
+		try {
+			checkUser = userdao.signUp(user);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Fill your code here
 		
 		
